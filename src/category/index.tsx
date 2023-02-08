@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, FlatList, Pressable , View , Dimensions, TouchableOpacity, Image} from 'react-native'
+import { Text, FlatList, Pressable , View , Dimensions, TouchableOpacity, Image , ScrollView, Animated} from 'react-native'
 import { gql, useQuery } from '@apollo/client'
 import { StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -137,7 +137,21 @@ const styles =  StyleSheet.create({
       bottom: 0,
       right: 0,
     
-  }
+  },
+  fixedElement: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 50,
+    backgroundColor: 'white',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+  },
 }) 
 
 const ChapterItem = ({ chapter, onPress , navigation} : { chapter:any , onPress : any ,navigation: any }) => {
@@ -156,6 +170,8 @@ const ChapterItem = ({ chapter, onPress , navigation} : { chapter:any , onPress 
 
 export default function index({navigation}:{navigation : any}) {
     const [ numcol , setNumcol ] = useState(2)
+    const [scrollY, setScrollY] = useState(new Animated.Value(0));
+
     const navigationpush = useNavigation();
 
         /**
@@ -170,13 +186,12 @@ export default function index({navigation}:{navigation : any}) {
     const _renderItem = ({ item, index } : { item :any , index : number }) => {
     if (item.type === 'video') {
         return (
-           <View style={styles.imageContainer}>
-              <VideoPlayer source={require("../assets/ezgif.com-resize-1-2.mp4")} />
-           </View>
+         <VideoPlayer source={require("../assets/ezgif.com-resize-1-2.mp4")}/>
+          
         ); 
     }
     return (  
-         <View style={styles.imageContainer}>
+         <View style={{ height : 100 }}>
         <Image source={{ uri: item.url }} style={{ width: windowWidth, height: 300 , alignItems : 'center' , justifyContent :'center'}} />
          </View>
     );
@@ -204,7 +219,36 @@ console.log(datacarousal);
 
   return ( 
     //  <Text>sf</Text>
-    <View style={styles.viewstyle}>  
+    <View style={styles.container}>  
+
+
+<Animated.View
+        style={[
+          styles.fixedElement,
+          {
+            transform: [
+              {
+                translateY: scrollY.interpolate({
+                  inputRange: [0, 50],
+                  outputRange: [0, -50],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          },
+        ]}
+      />
+      <ScrollView
+        style={styles.scrollView}
+        onScroll={Animated.event([
+          {
+            nativeEvent: {
+              contentOffset: { y: scrollY },
+            },
+          },
+        ])}
+        scrollEventThrottle={16}
+      >
 
 <Carousel
 
@@ -212,6 +256,7 @@ console.log(datacarousal);
       renderItem={_renderItem}
       sliderWidth={windowWidth}
       itemWidth={windowWidth}
+      
       onSnapToItem={(index : any) => setActiveIndex(index)}
     />
 
@@ -256,6 +301,8 @@ console.log(datacarousal);
     )}
     keyExtractor={(chapter) => chapter.id.toString()}
   />
+      </ScrollView>
+
     </View>
   )
 }

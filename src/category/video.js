@@ -6,6 +6,7 @@ const VideoPlayer = ({ source }) => {
   const videoRef = useRef();
 
   return (
+    <View>
       <Video
         source={source}
         ref={videoRef}
@@ -16,7 +17,7 @@ const VideoPlayer = ({ source }) => {
         controls={true}
         resizeMode = {`cover`}
       />  
-  
+  </View>
   ); 
 };
 

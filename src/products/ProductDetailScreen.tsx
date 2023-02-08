@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet , Dimensions } from 'react-native';
 import { data } from "../mackdata/data"
 import Table from './table';
 import { gql, useQuery } from '@apollo/client'
+
 
 const ProductDetailScreen = ({ route, navigation } :  { route:any, navigation :any} ) => {
 
    const { params : { name } } = route
    console.log("hari",name);
-   
+   const source = { uri: 'http://samples.leanpub.com/thereactnativebook-sample.pdf', cache: true };
+
 //   const CHAPTERS_QUERY = gql`
 //   query product {
 //     product_template(where: {id: {_eq: ${name}}}) {
@@ -24,18 +26,21 @@ const ProductDetailScreen = ({ route, navigation } :  { route:any, navigation :a
 //  console.log(data); 
  
   return (
-    <View style={styles.container}>
+    <View style={styles.container}> 
       <View style={{ alignItems : 'center' }}>
       <Image source={{ uri :`http://gmtnew.mo.vc/web/image?model=product.template&id=${name?.id}&field=image_1920`}} style={styles.image}></Image>
 
           {/* <Image source={ data?.product_template?.image } style={styles.image} /> */}
           <Text style={styles.name}>{name?.name}</Text>
-          <Text style={styles.description}>{name?.description} -- {name?.id}</Text>
+          <Text style={styles.description}>{name?.description}</Text>
       </View>
       
       <View >
         <Text style={styles.specification}>Specifications</Text>
         <Table />
+
+        
+       
       </View>
     </View>
   );
@@ -49,6 +54,11 @@ const styles = StyleSheet.create({
     borderTopWidth : 3, 
     backgroundColor : '#fff'
   },
+  pdf: {
+    flex:1,
+    width:Dimensions.get('window').width,
+    height:Dimensions.get('window').height,
+},
   image: {
     width: 400,
     height: 200,

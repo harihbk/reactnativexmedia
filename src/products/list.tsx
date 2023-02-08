@@ -116,8 +116,7 @@ export default function List({navigation , route}: {navigation: any , route:any}
                           navigation.navigate('productdetail', {name:  item })  
                         }>  
                         <Image source={{ uri :`http://gmtnew.mo.vc/web/image?model=product.template&id=215&field=image_128` }} style={ numcol == 2 ? styles.tinyLogogrid : styles.tinyLogolist }></Image>
-                        <Text >{item.name}</Text>
-                        <Text >{item.id} </Text>
+                        <Text numberOfLines={1}>{item.name}</Text>
                       </TouchableOpacity>
                     </View>
                    
