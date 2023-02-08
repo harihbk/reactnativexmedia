@@ -14,9 +14,6 @@ import index from './category';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
-
-
-
   // Initialize Apollo Client
 const client = new ApolloClient({
   uri: 'https://gmtgraphql.mo.vc/v1/graphql',
@@ -25,35 +22,22 @@ const client = new ApolloClient({
   
   const Tab = createBottomTabNavigator();
   const Drawer = createDrawerNavigator();
-  const Stack = createStackNavigator();
-
+  const Stacj = createStackNavigator()
 
 
 
 
   export default function Layout() {
 
-
-    return (
+    return ( 
       <ApolloProvider client={client}>
           <SafeAreaView style={{ flex: 1 }}>
-  
-            {/* <NavigationContainer>
-              <Stack.Navigator>
-                <Stack.Screen
-                  name="Category"
-                  component={index}
-                  options={{title: 'Welcome'}}
-                />
-              </Stack.Navigator>
-            </NavigationContainer> */}
- 
           <NavigationContainer>
             <Drawer.Navigator  drawerContent = {props => <CustomDrawer {...props}/>} screenOptions={{ headerShown : true }}>
-                <Drawer.Screen name="Category" component={index} />
-                {/* <Stack.Screen   name="Category" component={index} /> */}
+              
+              <Drawer.Screen name="category" component={index} /> 
 
-                <Drawer.Screen name="product" component={List} options={{
+              <Drawer.Screen name="product" component={List} options={{
             drawerLabel: 'Hidden Page One option',
             title: 'Products',
             drawerItemStyle: {
@@ -61,9 +45,9 @@ const client = new ApolloClient({
             },
           }} />
 
-                <Drawer.Screen name="productdetail" component={ProductDetailScreen} options={{
+            <Drawer.Screen name="productdetail" component={ProductDetailScreen} options={{
             drawerLabel: 'Hidden Page One option',
-            title: 'Product Deatil',
+            title: 'Products',
             drawerItemStyle: {
               display: 'none',
             },

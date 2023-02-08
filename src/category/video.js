@@ -13,7 +13,7 @@ const VideoPlayer = ({ source }) => {
         style={styles.video}
         muted={false}
         repeat={true}
-        controls={false}
+        controls={true}
         resizeMode = {`cover`}
       />  
   

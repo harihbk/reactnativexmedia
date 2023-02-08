@@ -3,24 +3,16 @@ import { Text, FlatList, Pressable , View , Dimensions, TouchableOpacity, Image}
 import { gql, useQuery } from '@apollo/client'
 import { StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { data as customimage } from "../mackdata/data"
-import Carousel from 'react-native-snap-carousel';
+//import { data as customimage } from "../mackdata/data"
+import Carousel , { Pagination }  from 'react-native-snap-carousel';
 import VideoPlayer from "./video"
+import { useNavigation } from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 
 const width = Dimensions.get('screen').width / 2 - 8 
 
 
-const datacarousal = [
-    { 
-      type: 'video',
-      url : "../assets/ezgif.com-resize-1-2.mp4"
-    //  url: 'https://gmtengineers.com/wp-content/uploads/2019/11/ezgif.com-resize-1-2.mp4'
-    },
-    {
-      type: 'image',
-      url: 'https://gmtengineers.com/wp-content/uploads/2019/10/machine-13-1-768x384.jpg'
-    }
-  ];
+
 
 
 const CHAPTERS_QUERY = gql`
@@ -31,6 +23,16 @@ const CHAPTERS_QUERY = gql`
         name
     }  
 } 
+`
+
+const CHAPTERS_BANNER = gql`
+query banner { 
+  brand_banner {
+    id
+    name
+    
+  }
+}
 `
 
  
@@ -122,10 +124,11 @@ const styles =  StyleSheet.create({
   },
   imageContainer: {
     backgroundColor: 'white',
-    height: 300,
+    height: 400,
     width: '95%',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom : 150
   },
   backgroundVideo: {
       position: 'absolute',
@@ -141,12 +144,7 @@ const ChapterItem = ({ chapter, onPress , navigation} : { chapter:any , onPress 
     const { complete_name, id , name } = chapter
     let header, subheader
   
-    // if (number) {
-    //   header = `Chapter ${number}`
-    //   subheader = title
-    // } else {
-    //   header = title
-    // }
+  
   
     return (
       <Pressable style={styles.item} onPress={onPress}>
@@ -158,6 +156,7 @@ const ChapterItem = ({ chapter, onPress , navigation} : { chapter:any , onPress 
 
 export default function index({navigation}:{navigation : any}) {
     const [ numcol , setNumcol ] = useState(2)
+    const navigationpush = useNavigation();
 
         /**
          * Carousal
@@ -185,34 +184,65 @@ export default function index({navigation}:{navigation : any}) {
 
     
     const { data, loading , error } = useQuery(CHAPTERS_QUERY)
-     console.log(loading);  
+    const { data : bannerdata , loading : bannerloading, error : bannererror } = useQuery(CHAPTERS_BANNER)
+
+    const datacarousal = [
+      { 
+        type: 'video',
+        url : "../assets/ezgif.com-resize-1-2.mp4"
+      }
+    ];
+
+    bannerdata?.brand_banner?.map((res : any)=>{
+      let obj = { type : "image" , url : `https://gmtnew.mo.vc/web/image?model=brand.banner&id=${res.id}&field=brand_image&unique=02072023161311` }
+      datacarousal.push(obj)
       
+    })  
+        
+console.log(datacarousal);  
+
+
   return ( 
     //  <Text>sf</Text>
-    <View style={styles.viewstyle}> 
+    <View style={styles.viewstyle}>  
 
 <Carousel
 
-      data={datacarousal}
+      data={datacarousal} 
       renderItem={_renderItem}
       sliderWidth={windowWidth}
       itemWidth={windowWidth}
-      onSnapToItem={(index: React.SetStateAction<number>) => setActiveIndex(index)}
+      onSnapToItem={(index : any) => setActiveIndex(index)}
     />
+
+    <View style={{ height : 4 , position : 'relative' , backgroundColor : 'red'  }}>
+      <Pagination
+       style={{ position : "relative" , padding: 0, margin: 0, }}
+        dotsLength={3}
+        activeDotIndex={activeIndex}
+         containerStyle={{ position : "absolute" }}
+        dotStyle={{ color : 'red' }}
+       // inactiveDotStyle={styles.inactiveDot}
+        inactiveDotOpacity={0.4}
+        inactiveDotScale={0.6}
+      />
+    </View>
+      
 
     <View style={styles.topsection}>
     <View style={{ marginRight: 10 }}><TouchableOpacity onPress={()=>setNumcol(1)}><Icon name="list" size={18}  /></TouchableOpacity></View> 
     <View style={{ marginRight: 10 }}><TouchableOpacity onPress={()=>setNumcol(2)}><Icon name="th-large" size={18}  /></TouchableOpacity></View> 
     </View> 
     <FlatList
-    data={data?.product_category}
+    data={data?.product_category} 
     numColumns={numcol} 
     key={numcol}
     renderItem={({ item }) => (
        
         <View style={ numcol == 2 ? styles.cardgrid : styles.cardlist}>
           <TouchableOpacity onPress={() =>
-            navigation.navigate('product', {id: item?.id})
+           // StackActions.push('product', {id: item?.id})
+           navigation.navigate('product', {id: item?.id})
             }>
 
      <Image source={{ uri :`https://gmtnew.mo.vc/web/image?model=product.category&id=${item.id}&field=image_1920`}} style={ numcol == 2 ? styles.tinyLogogrid : styles.tinyLogolist }></Image>

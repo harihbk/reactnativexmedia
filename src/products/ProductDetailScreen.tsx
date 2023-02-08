@@ -14,14 +14,14 @@ const ProductDetailScreen = ({ route, navigation } :  { route:any, navigation :a
 //     product_template(where: {id: {_eq: ${name}}}) {
 //       categ_id
 //       color
-//       description 
+//       description  
 //       id
 //       name
-//     }
+//     } 
 // } 
 // `
 // const { data, loading , error } = useQuery(CHAPTERS_QUERY)
-//  console.log(data);
+//  console.log(data); 
  
   return (
     <View style={styles.container}>
