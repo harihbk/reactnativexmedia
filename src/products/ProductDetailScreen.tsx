@@ -25,12 +25,12 @@ const ProductDetailScreen = ({ route, navigation } :  { route:any, navigation :a
  
   return (
     <View style={styles.container}>
-      <View style={{ alignItems : 'center' }}>
+      <View style={{ alignItems : 'center', display : 'flex' }}>
       <Image source={{ uri :`http://gmtnew.mo.vc/web/image?model=product.template&id=${name?.id}&field=image_1920`}} style={styles.image}></Image>
 
           {/* <Image source={ data?.product_template?.image } style={styles.image} /> */}
           <Text style={styles.name}>{name?.name}</Text>
-          <Text style={styles.description}>{name?.description} -- {name?.id}</Text>
+          {/* <Text style={styles.description}>{name?.description} -- {name?.id}</Text> */}
       </View>
       
       <View >
