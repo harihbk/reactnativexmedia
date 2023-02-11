@@ -12,6 +12,7 @@ import { AppRegistry } from 'react-native';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import index from './category';
 import { createStackNavigator } from '@react-navigation/stack';
+import { MenuProvider } from 'react-native-popup-menu';
 
 
   // Initialize Apollo Client
@@ -30,6 +31,8 @@ const client = new ApolloClient({
   export default function Layout() {
 
     return ( 
+      
+<MenuProvider>
       <ApolloProvider client={client}>
           <SafeAreaView style={{ flex: 1 }}>
           <NavigationContainer>
@@ -57,6 +60,6 @@ const client = new ApolloClient({
           </NavigationContainer>
           </SafeAreaView>
       </ApolloProvider>
-
+</MenuProvider>
     );
   }
