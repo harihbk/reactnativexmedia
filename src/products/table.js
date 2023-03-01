@@ -1,8 +1,38 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { gql, useQuery } from '@apollo/client'
 
-const Table = () => (
-  <ScrollView horizontal={true}>
+
+
+export default function table() {
+
+
+
+const CHAPTERS_QUERY= gql`
+{ 
+  product_template(where: {}) {
+    id
+    name
+    ir_attachment_product_template_rels {
+      ir_attachment_id
+      product_template_id
+      ir_attachment_name {
+        name
+      }
+    }
+  }
+    }
+`;
+
+const { data, loading , error } = useQuery(CHAPTERS_QUERY)
+console.log("sdf");
+console.log(data?.product_template)
+
+//console.log(data); 
+
+  
+  return (
+    <ScrollView horizontal={true}>
     <View style={styles.tableContainer}>
       <View style={styles.headerContainer}>
         <View style={[styles.cell, { width: 100 }]}>
@@ -66,7 +96,9 @@ const Table = () => (
       </View>
     </View>
   </ScrollView>
-);
+  )
+}
+
 
 const styles = StyleSheet.create({
   tableContainer: {
@@ -91,5 +123,3 @@ const styles = StyleSheet.create({
   },
   text: {},
 });
-
-export default Table;

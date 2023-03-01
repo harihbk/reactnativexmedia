@@ -14,6 +14,7 @@ import Pdf from 'react-native-pdf';
 import { PermissionsAndroid } from 'react-native';
 import RNFS from 'react-native-fs';
 import { Linking } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -31,6 +32,7 @@ export default function  ProductDetailScreen({ route, navigation } :  { route:an
   const [showMenu, setShowMenu] = React.useState(false);
   const [ items , setItems ] = React.useState([])
   const [playing, setPlaying] = useState(false);
+  const [ loadingpage , setLoadingpage ] = useState(false)
 
 
    const { params : { name } } = route
@@ -123,14 +125,18 @@ export default function  ProductDetailScreen({ route, navigation } :  { route:an
 
   
   const sharepdf = async (pdf:any) => {
-
-    let imagePath: string  = null;
+    setLoadingpage(true)
+    let imagePath: string;
     RNFetchBlob.config({
       fileCache: true,
     })
       .fetch('GET', pdf)
       .then((resp) => {
         imagePath = resp.path();
+        console.log("hari hn");
+        console.log(imagePath);
+        console.log("hari hn");
+        setLoadingpage(false)
         return resp.readFile('base64');
       })
       .then(async (base64Str) => {
@@ -317,6 +323,12 @@ const _renderItem = ({ item, index }: { item: any, index: number }) => {
     <ScrollView >
     <View style={styles.container}>
 
+    <Spinner
+          visible={loadingpage}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+
 {/* <View style={{  backgroundColor : 'white' }}> */}
 
 
@@ -338,7 +350,7 @@ const _renderItem = ({ item, index }: { item: any, index: number }) => {
     
     <View  >
       <Menu style={{ justifyContent : 'flex-end' , alignItems : 'flex-end' }}>
-        <MenuTrigger text='Clik to share PDF' 
+        <MenuTrigger text='Share Catlog' 
         style={{
           marginTop : -50,
           backgroundColor : '#FFD580',
@@ -352,7 +364,7 @@ const _renderItem = ({ item, index }: { item: any, index: number }) => {
           hh.length > 0 && hh.map((res:any)=>(
             <>
           <MenuOption >
-              <Text style={{color: 'blue'}} onPress={() => sharepdf(res.title)} onLongPress={()=>console.log('Long Press')}>{res.name}</Text>
+             <TouchableOpacity  onPress={() => sharepdf(res.title)}><Text>{res.name}</Text></TouchableOpacity>
           </MenuOption>
         </>
           ))    
@@ -364,7 +376,7 @@ const _renderItem = ({ item, index }: { item: any, index: number }) => {
 
     <View >
       <Menu style={{ justifyContent : 'flex-end' , alignItems : 'flex-end' }}>
-        <MenuTrigger text='Clik to Download' 
+        <MenuTrigger text='Download Catlog' 
         style={{
           marginTop : -50,
           backgroundColor : '#FFD580',
@@ -397,30 +409,12 @@ const _renderItem = ({ item, index }: { item: any, index: number }) => {
       <View style={{ alignItems : 'center', display : 'flex' }}>
       {/* <Image source={{ uri :`https://gmtnew.mo.vc/web/image?model=product.template&id=${name?.id}&field=image_1920`}} style={styles.image}></Image> */}
 
-          <Text style={styles.name}>{name?.name} {name?.id}</Text>
+          <Text style={styles.name}>{name?.name}</Text>
       </View>
       
       <View >
         <Text style={styles.specification}>Specifications</Text>
         <Table />
-
-
-
-{/* 
-        <ContextMenu
-      actions={[{ title: "Title 1" }, { title: "Title 2" }]}
-      onPress={(e) => {
-        sharepdf(e.nativeEvent.name)
-        // console.warn(
-        //   `Pressed ${e.nativeEvent.name} at index ${e.nativeEvent.index}`
-        // );
-      }}
-    >
-    
-      <Button >Share</Button>
-    </ContextMenu> */}
-
-       
       </View>
      
     </View>
@@ -497,5 +491,8 @@ const styles = StyleSheet.create({
     width: '90%',
     paddingBottom: 10
   },
+  spinnerTextStyle: {
+    color: '#FFF'
+  }
 });
 
